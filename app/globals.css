@@ -1,26 +1,154 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --color-blush: #ffd6e0;
+  --color-blush-deep: #f6b3c4;
+  --color-blush-soft: #ffeef2;
+  --color-maroon: #6e1f2e;
+  --color-cocoa: #5c3a2e;
+  --color-cream: #fff8f2;
+  --color-paper: #fffdfa;
+  --color-leaf: #86a96f;
+  --color-leaf-deep: #5f8a4f;
+
+  --shadow-soft: 0 1px 2px rgb(92 58 46 / 0.05), 0 10px 30px -12px rgb(110 31 46 / 0.18);
+  --shadow-lift: 0 2px 4px rgb(92 58 46 / 0.06), 0 24px 50px -18px rgb(110 31 46 / 0.3);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
+  --font-sans: var(--font-karla), ui-sans-serif, system-ui, sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+:root {
+  --page-bg: #fff8f2;
+}
+
+html {
+  background: var(--page-bg);
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--page-bg);
+  color: var(--color-cocoa);
+  font-family: var(--font-sans);
+  overflow-x: clip;
+}
+
+::selection {
+  background: var(--color-blush);
+  color: var(--color-maroon);
+}
+
+.font-display {
+  font-variation-settings:
+    "SOFT" 100,
+    "WONK" 0;
+}
+
+.ruled-paper {
+  background-color: var(--color-paper);
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent calc(2rem - 1px),
+    rgb(246 179 196 / 0.45) calc(2rem - 1px),
+    rgb(246 179 196 / 0.45) 2rem
+  );
+  background-position: 0 1.6rem;
+}
+
+@keyframes shimmer {
+  0%,
+  55% {
+    transform: translateX(-120%) skewX(-20deg);
+  }
+  100% {
+    transform: translateX(220%) skewX(-20deg);
+  }
+}
+.shimmer {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.shimmer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  width: 45%;
+  background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.55), transparent);
+  animation: shimmer 3.2s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+@keyframes caret {
+  50% {
+    opacity: 0;
+  }
+}
+.caret {
+  animation: caret 1s steps(1) infinite;
+}
+
+@keyframes float-blob {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(0, -18px, 0) scale(1.05);
+  }
+}
+
+@keyframes mote-rise {
+  0% {
+    transform: translate3d(0, 0, 0);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: translate3d(14px, -100svh, 0);
+    opacity: 0;
+  }
+}
+
+@keyframes rain-fall {
+  from {
+    transform: translateY(-12px);
+    opacity: 0.9;
+  }
+  to {
+    transform: translateY(180px);
+    opacity: 0.2;
+  }
+}
+
+@keyframes ripple-out {
+  from {
+    transform: translate(-50%, -50%) scale(0.1);
+    opacity: 0.9;
+  }
+  to {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mote,
+  .rain-drop,
+  .ripple-ring,
+  .shimmer::after,
+  .caret,
+  .float-blob {
+    animation: none !important;
+  }
+  .mote {
+    display: none;
+  }
 }
