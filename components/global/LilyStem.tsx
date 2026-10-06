@@ -6,6 +6,7 @@ import BudShape from "@/components/lily/BudShape";
 import { LILY_BLOOM, LILY_CLOSE, REDUCED_QUERY, clamp, scrollState, stemState } from "@/lib/motion-utils";
 
 type Leaf = { x: number; y: number; side: 1 | -1 };
+type Chunk = { top: number; h: number; d: string; i0: number; i1: number; leaves: number[] };
 type Layout = {
   w: number;
   h: number;
@@ -18,11 +19,13 @@ type Layout = {
   startY: number;
   endY: number;
   leaves: Leaf[];
+  chunks: Chunk[];
   reduced: boolean;
   mobile: boolean;
 };
 
-const STEP = 6;
+const STEP = 10;
+const CHUNK = 700;
 const BUD_BOX = 80;
 
 const smooth = (a: number, b: number, v: number) => {
@@ -139,8 +142,20 @@ function buildLayout(main: HTMLElement): Layout | null {
     return { x: xAt(y), y, side: (mobile ? inward : -inward) as 1 | -1 };
   });
 
+  const chunks: Chunk[] = [];
+  for (let top = 0; top < e.y; top += CHUNK) {
+    let i0 = ys.findIndex((y) => y >= top);
+    i0 = Math.max(0, i0 - 1);
+    let i1 = ys.findIndex((y) => y > top + CHUNK);
+    i1 = i1 === -1 ? ys.length - 1 : i1;
+    let cd = `M${xs[i0].toFixed(1)} ${(ys[i0] - top).toFixed(1)}`;
+    for (let i = i0 + 1; i <= i1; i++) cd += ` L${xs[i].toFixed(1)} ${(ys[i] - top).toFixed(1)}`;
+    const chunkLeaves = leaves.map((l, li) => (l.y >= top && l.y < top + CHUNK ? li : -1)).filter((li) => li >= 0);
+    chunks.push({ top, h: Math.min(CHUNK, e.y - top) + 12, d: cd, i0, i1, leaves: chunkLeaves });
+  }
+
   const reduced = window.matchMedia(REDUCED_QUERY).matches;
-  return { w, h, d, ts, xs, ys, lens, startY: s.y, endY: e.y, leaves, reduced, mobile };
+  return { w, h, d, ts, xs, ys, lens, startY: s.y, endY: e.y, leaves, chunks, reduced, mobile };
 }
 
 function sampleAt(l: Layout, t: number) {
@@ -167,8 +182,8 @@ function sampleAt(l: Layout, t: number) {
 
 export default function LilyStem() {
   const rootRef = useRef<HTMLDivElement>(null);
-  const pathRef = useRef<SVGPathElement>(null);
-  const hiRef = useRef<SVGPathElement>(null);
+  const pathRefs = useRef<(SVGPathElement | null)[]>([]);
+  const hiRefs = useRef<(SVGPathElement | null)[]>([]);
   const budRef = useRef<HTMLDivElement>(null);
   const budFadeRef = useRef<HTMLDivElement>(null);
   const leafRefs = useRef<(SVGGElement | null)[]>([]);
@@ -206,17 +221,32 @@ export default function LilyStem() {
 
   useEffect(() => {
     if (!layout) return;
-    const path = pathRef.current!;
-    const hi = hiRef.current!;
-    const total = path.getTotalLength();
-    const ratio = total / (layout.lens[layout.lens.length - 1] || 1);
-    for (const p of [path, hi]) p.style.strokeDasharray = `${total} ${total}`;
+    // the stem is split into short chunks so only the one that is growing gets repainted
+    const parts = layout.chunks.map((c, k) => {
+      const path = pathRefs.current[k]!;
+      const hi = hiRefs.current[k]!;
+      const total = path.getTotalLength();
+      const own = layout.lens[c.i1] - layout.lens[c.i0] || 1;
+      for (const p of [path, hi]) p.style.strokeDasharray = `${total} ${total}`;
+      return { c, path, hi, total, ratio: total / own, state: "" };
+    });
+    const setPart = (k: number, len: number) => {
+      const part = parts[k];
+      const offset = Math.min(part.total, Math.max(0, part.total - len * part.ratio));
+      const state = offset.toFixed(1);
+      if (state === part.state) return;
+      part.state = state;
+      part.path.style.strokeDashoffset = state;
+      part.hi.style.strokeDashoffset = state;
+      part.path.style.opacity = "1";
+      part.hi.style.opacity = "1";
+    };
     const leaves = leafRefs.current.slice(0, layout.leaves.length).filter(Boolean) as SVGGElement[];
 
     stemState.xAt = (y: number) => sampleAt(layout, y).x;
 
     if (reduced) {
-      for (const p of [path, hi]) p.style.strokeDashoffset = "0";
+      parts.forEach((_, k) => setPart(k, Infinity));
       gsap.set(leaves, { scale: 1, rotation: 0 });
       return;
     }
@@ -231,9 +261,7 @@ export default function LilyStem() {
     const update = (progress: number) => {
       tip = sampleAt(layout, layout.startY + (layout.endY - layout.startY) * progress);
       stemState.tipY = tip.t;
-      const offset = `${Math.max(0, total - tip.len * ratio)}`;
-      path.style.strokeDashoffset = offset;
-      hi.style.strokeDashoffset = offset;
+      parts.forEach((part, k) => setPart(k, tip.len - layout.lens[part.c.i0]));
       layout.leaves.forEach((leaf, i) => {
         const g = tip.t > leaf.y + 8;
         if (g === grown[i]) return;
@@ -285,31 +313,64 @@ export default function LilyStem() {
     <div ref={rootRef} aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
       {layout && (
         <>
-          <svg className="absolute left-0 top-0 z-0" width={layout.w} height={layout.endY + 4} viewBox={`0 0 ${layout.w} ${layout.endY + 4}`}>
-            <defs>
-              <linearGradient id="stem-leaf" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0" stopColor="#7FA368" />
-                <stop offset="1" stopColor="#B4D29C" />
-              </linearGradient>
-            </defs>
-            <path ref={pathRef} d={layout.d} fill="none" stroke="#86A96F" strokeWidth="3.4" strokeLinecap="round" />
-            <path ref={hiRef} d={layout.d} fill="none" stroke="#CFE3BD" strokeWidth="1" strokeLinecap="round" transform="translate(-0.9 0)" />
-            {layout.leaves.map((leaf, i) => (
-              <g
-                key={i}
-                transform={`translate(${leaf.x.toFixed(1)} ${leaf.y.toFixed(1)}) scale(${leaf.side * (layout.mobile ? 0.6 : 1)} ${layout.mobile ? 0.6 : 1}) rotate(-28)`}
-              >
-                <g
-                  ref={(el) => {
-                    leafRefs.current[i] = el;
-                  }}
-                >
-                  <path d="M0 0 C 14 -16, 38 -20, 54 -6 C 38 6, 16 8, 0 0Z" fill="url(#stem-leaf)" stroke="#6F9759" strokeWidth="0.8" />
-                  <path d="M3 -1 C 18 -8, 34 -10, 48 -6" fill="none" stroke="#E4F0D8" strokeWidth="1" strokeLinecap="round" opacity="0.8" />
-                </g>
-              </g>
-            ))}
-          </svg>
+          {layout.chunks.map((c, k) => (
+            <svg
+              key={k}
+              className="absolute left-0 z-0 overflow-visible"
+              style={{ top: c.top }}
+              width={layout.w}
+              height={c.h}
+              viewBox={`0 0 ${layout.w} ${c.h}`}
+            >
+              <defs>
+                <linearGradient id={`stem-leaf-${k}`} x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0" stopColor="#7FA368" />
+                  <stop offset="1" stopColor="#B4D29C" />
+                </linearGradient>
+              </defs>
+              <path
+                ref={(el) => {
+                  pathRefs.current[k] = el;
+                }}
+                d={c.d}
+                fill="none"
+                stroke="#86A96F"
+                strokeWidth="3.4"
+                opacity="0"
+                strokeLinecap="round"
+              />
+              <path
+                ref={(el) => {
+                  hiRefs.current[k] = el;
+                }}
+                d={c.d}
+                fill="none"
+                stroke="#CFE3BD"
+                strokeWidth="1"
+                opacity="0"
+                strokeLinecap="round"
+                transform="translate(-0.9 0)"
+              />
+              {c.leaves.map((i) => {
+                const leaf = layout.leaves[i];
+                return (
+                  <g
+                    key={i}
+                    transform={`translate(${leaf.x.toFixed(1)} ${(leaf.y - c.top).toFixed(1)}) scale(${leaf.side * (layout.mobile ? 0.6 : 1)} ${layout.mobile ? 0.6 : 1}) rotate(-28)`}
+                  >
+                    <g
+                      ref={(el) => {
+                        leafRefs.current[i] = el;
+                      }}
+                    >
+                      <path d="M0 0 C 14 -16, 38 -20, 54 -6 C 38 6, 16 8, 0 0Z" fill={`url(#stem-leaf-${k})`} stroke="#6F9759" strokeWidth="0.8" />
+                      <path d="M3 -1 C 18 -8, 34 -10, 48 -6" fill="none" stroke="#E4F0D8" strokeWidth="1" strokeLinecap="round" opacity="0.8" />
+                    </g>
+                  </g>
+                );
+              })}
+            </svg>
+          ))}
 
           {!reduced && (
             <div

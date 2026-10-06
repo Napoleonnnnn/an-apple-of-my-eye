@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { gsap, useGSAP } from "@/lib/gsap";
+import { gsap, useGSAP, whileVisible } from "@/lib/gsap";
 import SectionTitle from "@/components/ui/SectionTitle";
 import Lily from "@/components/lily/Lily";
 import { content } from "@/lib/content";
@@ -37,7 +37,7 @@ export default function Progress() {
           .fromTo(q(".bar-tick"), { backgroundColor: "#F1D9DF" }, { backgroundColor: "#FFFFFF", stagger: 0.24, duration: 0.05 }, 0.2)
           .fromTo(q(".bar-end"), { scale: 0, rotate: -90 }, { scale: 1, rotate: 0, duration: 0.2, ease: "back.out(2.5)" }, 0.95);
 
-        gsap.to(q(".bar-rider-inner"), { y: -6, rotate: 12, duration: 0.5, ease: "sine.inOut", yoyo: true, repeat: -1 });
+        whileVisible(gsap.to(q(".bar-rider-inner"), { y: -6, rotate: 12, duration: 0.5, ease: "sine.inOut", yoyo: true, repeat: -1 }), sectionRef.current);
       });
     },
     { scope: sectionRef },

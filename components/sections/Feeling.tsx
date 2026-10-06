@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { gsap, useGSAP } from "@/lib/gsap";
+import { gsap, useGSAP, whileVisible } from "@/lib/gsap";
 import Lily from "@/components/lily/Lily";
 import { content } from "@/lib/content";
 import { MOTION_OK_QUERY } from "@/lib/motion-utils";
@@ -44,19 +44,27 @@ export default function Feeling() {
           })
           .fromTo(q(".pond"), { scale: 0.45, rotate: -25, opacity: 0 }, { scale: 1, rotate: 0, opacity: 1, duration: 1, ease: "power2.out" })
           .fromTo(q(".scroll-ring"), { scale: 0.05, opacity: 0.9 }, { scale: 1.5, opacity: 0, duration: 1, stagger: 0.25 }, 0)
-          .from(q(".drop-letter"), { y: -220, opacity: 0, rotate: "random(-40, 40)", duration: 0.4, stagger: { amount: 0.5 }, ease: "bounce.out" }, 0.45)
+          .from(
+            q(".drop-letter"),
+            { force3D: false, y: -220, opacity: 0, rotate: "random(-40, 40)", duration: 0.4, stagger: { amount: 0.5 }, ease: "bounce.out" },
+            0.45,
+          )
           .from(q(".pad"), { scale: 0, rotate: -90, duration: 0.4, stagger: 0.15, ease: "back.out(2)" }, 0.6);
 
-        gsap.to(q(".float-letter"), {
-          y: -10,
-          rotate: 4,
-          duration: 1.4,
-          ease: "sine.inOut",
-          yoyo: true,
-          repeat: -1,
-          stagger: { each: 0.12, from: "start" },
-        });
-        gsap.to(q(".pad"), { y: -6, rotate: 6, duration: 2.6, ease: "sine.inOut", yoyo: true, repeat: -1, stagger: 0.8 });
+        whileVisible(
+          gsap.to(q(".float-letter"), {
+            force3D: false,
+            y: -10,
+            rotate: 4,
+            duration: 1.4,
+            ease: "sine.inOut",
+            yoyo: true,
+            repeat: -1,
+            stagger: { each: 0.12, from: "start" },
+          }),
+          sectionRef.current,
+        );
+        whileVisible(gsap.to(q(".pad"), { y: -6, rotate: 6, duration: 2.6, ease: "sine.inOut", yoyo: true, repeat: -1, stagger: 0.8 }), sectionRef.current);
       });
     },
     { scope: sectionRef },

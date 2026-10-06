@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { gsap, useGSAP } from "@/lib/gsap";
+import { gsap, ScrollTrigger, useGSAP, whileVisible } from "@/lib/gsap";
 import SectionTitle from "@/components/ui/SectionTitle";
 import Lily from "@/components/lily/Lily";
 import BudShape from "@/components/lily/BudShape";
@@ -47,7 +47,7 @@ export default function Journey() {
       const tls = rows.map((row, k) => {
         const q = gsap.utils.selector(row);
         const fromStemOnRight = row.dataset.side === "left";
-        const tl = gsap.timeline({ paused: true, defaults: { ease: "power2.out" } });
+        const tl = gsap.timeline({ paused: true, defaults: { ease: "power2.out", force3D: false } });
         tl.fromTo(q(".j-node"), { scale: 0 }, { scale: 1, duration: 0.35, ease: "back.out(2.5)" });
 
         const petals = q(".j-node .lily-petal");
@@ -96,27 +96,35 @@ export default function Journey() {
       });
       const shown = rows.map(() => reduce);
 
-      if (!reduce) gsap.to(gsap.utils.toArray(".sparkle", section), { rotation: 90, duration: 2.4, repeat: -1, ease: "none", stagger: 0.4 });
+      if (!reduce)
+        whileVisible(gsap.to(gsap.utils.toArray(".sparkle", section), { rotation: 90, duration: 2.4, repeat: -1, ease: "none", stagger: 0.4 }), section);
 
-      const widths = rows.map(() => -1);
-      const tick = () => {
+      const rowY = rows.map(() => Infinity);
+      let measuredFor: typeof stemState.xAt = null;
+      let dirty = true;
+      const measure = () => {
         const mr = main.getBoundingClientRect();
         rows.forEach((row, k) => {
-          const card = row.querySelector<HTMLElement>(".j-card")!.getBoundingClientRect();
-          const y = card.top + card.height / 2 - mr.top;
+          const r = row.getBoundingClientRect();
+          rowY[k] = r.top + r.height / 2 - mr.top;
+          if (!stemState.xAt) return;
+          const stemX = stemState.xAt(rowY[k]);
+          const gap = row.dataset.side === "left" ? stemX - (r.right - mr.left) : r.left - mr.left - stemX;
+          twigs[k].style.width = `${Math.max(14, Math.round(gap))}px`;
+        });
+        measuredFor = stemState.xAt;
+        dirty = false;
+      };
+      const markDirty = () => {
+        dirty = true;
+      };
+      ScrollTrigger.addEventListener("refresh", markDirty);
 
-          if (stemState.xAt) {
-            const stemX = stemState.xAt(y);
-            const gap = row.dataset.side === "left" ? stemX - (card.right - mr.left) : card.left - mr.left - stemX;
-            const width = Math.max(14, Math.round(gap));
-            if (width !== widths[k]) {
-              widths[k] = width;
-              twigs[k].style.width = `${width}px`;
-            }
-          }
-
-          if (reduce) return;
-          const touched = stemState.tipY + TOUCH >= y;
+      const tick = () => {
+        if (dirty || measuredFor !== stemState.xAt) measure();
+        if (reduce) return;
+        rows.forEach((row, k) => {
+          const touched = stemState.tipY + TOUCH >= rowY[k];
           if (touched === shown[k]) return;
           shown[k] = touched;
           if (touched) {
@@ -134,7 +142,10 @@ export default function Journey() {
         });
       };
       gsap.ticker.add(tick);
-      return () => gsap.ticker.remove(tick);
+      return () => {
+        gsap.ticker.remove(tick);
+        ScrollTrigger.removeEventListener("refresh", markDirty);
+      };
     },
     { scope: sectionRef },
   );

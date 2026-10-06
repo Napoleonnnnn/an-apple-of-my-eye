@@ -1,10 +1,10 @@
 "use client";
 
 import { useRef } from "react";
-import { gsap, useGSAP } from "@/lib/gsap";
+import { gsap, useGSAP, whileVisible } from "@/lib/gsap";
 import Lily from "@/components/lily/Lily";
 import { content } from "@/lib/content";
-import { MOTION_OK_QUERY, burstPetals } from "@/lib/motion-utils";
+import { MOTION_OK_QUERY, burstPetals, blurFrom } from "@/lib/motion-utils";
 
 const { line, flag } = content.alwaysThere;
 
@@ -40,7 +40,7 @@ export default function AlwaysThere() {
           })
           .from(q(".cloud"), { y: -60, opacity: 0, scale: 0.7, duration: 0.3, ease: "back.out(2)" })
           .from(q(".rain"), { opacity: 0, duration: 0.2 }, "<0.1")
-          .from(q(".line-word"), { opacity: 0, y: 24, filter: "blur(6px)", stagger: 0.06, duration: 0.25 }, 0.2)
+          .from(q(".line-word"), { opacity: 0, y: 24, ...blurFrom(6), stagger: 0.06, duration: 0.25 }, 0.2)
 
           .fromTo(q(".umbrella"), { y: -140, rotate: -40, opacity: 0 }, { y: 0, rotate: 0, opacity: 1, duration: 0.35, ease: "power2.out" }, 0.55)
           .fromTo(q(".canopy"), { scaleX: 0.15 }, { scaleX: 1, duration: 0.25, ease: "back.out(2.5)" }, 0.85)
@@ -70,7 +70,10 @@ export default function AlwaysThere() {
           .fromTo(q(".flag-fill"), { attr: { fill: "#D9473F", stroke: "#B5332C" } }, { attr: { fill: "#FFD6E0", stroke: "#F4A3B9" }, duration: 0.3 }, 0.7)
           .from(q(".flag-lily"), { scale: 0, rotate: -120, duration: 0.25, ease: "back.out(3)" }, 0.9);
 
-        gsap.to(q(".flag-wave"), { skewY: 6, scaleX: 0.94, duration: 0.8, ease: "sine.inOut", yoyo: true, repeat: -1, transformOrigin: "0% 50%" });
+        whileVisible(
+          gsap.to(q(".flag-wave"), { skewY: 6, scaleX: 0.94, duration: 0.8, ease: "sine.inOut", yoyo: true, repeat: -1, transformOrigin: "0% 50%" }),
+          sectionRef.current,
+        );
       });
     },
     { scope: sectionRef },

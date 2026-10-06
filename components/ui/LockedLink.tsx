@@ -131,13 +131,7 @@ export default function LockedLink({ label, unlockAt }: { label: string; unlockA
     <div ref={boxRef} className="flex min-h-14 flex-col items-center">
       <AnimatePresence mode="wait">
         {!unlocked ? (
-          <motion.div
-            key="locked"
-            role="timer"
-            className="flex items-center gap-3"
-            exit={{ scale: 0.6, opacity: 0, filter: "blur(6px)" }}
-            transition={{ duration: 0.35 }}
-          >
+          <motion.div key="locked" role="timer" className="flex items-center gap-3" exit={{ scale: 0.6, opacity: 0 }} transition={{ duration: 0.35 }}>
             <Lock open={false} />
             <span className="flex items-center gap-1.5" aria-hidden>
               <Digits value={pad(h)} />

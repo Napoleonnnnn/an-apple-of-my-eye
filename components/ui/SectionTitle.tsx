@@ -29,6 +29,7 @@ export default function SectionTitle({ eyebrow, children }: { eyebrow?: string; 
         let burst = false;
         gsap
           .timeline({
+            defaults: { force3D: false },
             scrollTrigger: {
               trigger: el,
               start: "top 95%",

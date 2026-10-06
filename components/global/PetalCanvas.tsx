@@ -84,7 +84,7 @@ export default function PetalCanvas() {
     let bursts: Petal[] = [];
 
     const resize = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const dpr = Math.min(window.devicePixelRatio || 1, window.innerWidth < 768 ? 1.5 : 2);
       w = window.innerWidth;
       h = window.innerHeight;
       canvas.width = Math.round(w * dpr);
@@ -92,7 +92,7 @@ export default function PetalCanvas() {
       canvas.style.width = `${w}px`;
       canvas.style.height = `${h}px`;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      const count = w < 768 ? 8 : 14;
+      const count = w < 768 ? 6 : 14;
       if (ambient.length !== count || w < 768 !== ambient.some((p) => p.laneX !== null)) {
         ambient = Array.from({ length: count }, () => ambientPetal(w, h, true));
       }

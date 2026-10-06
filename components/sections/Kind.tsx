@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import { gsap, useGSAP } from "@/lib/gsap";
 import { content } from "@/lib/content";
-import { MOTION_OK_QUERY } from "@/lib/motion-utils";
+import { MOTION_OK_QUERY, blurFrom, blurTo } from "@/lib/motion-utils";
 
 const text = content.messages.kind;
 const words = text.split(" ");
@@ -33,8 +33,8 @@ export default function Kind() {
           .fromTo(q(".rays"), { rotate: -30, opacity: 0 }, { rotate: 20, opacity: 1, duration: 1.4 }, 0)
           .fromTo(
             q(".kind-letter"),
-            { opacity: 0.08, filter: "blur(10px)", y: 18 },
-            { opacity: 1, filter: "blur(0px)", y: 0, duration: 0.25, stagger: { amount: 0.9 } },
+            { opacity: 0.08, ...blurFrom(10), y: 18, force3D: false },
+            { opacity: 1, ...blurTo(), y: 0, duration: 0.25, stagger: { amount: 0.9 } },
             0.25,
           )
           .fromTo(q(".kind-line"), { scaleX: 0 }, { scaleX: 1, duration: 0.4 }, ">-0.1");

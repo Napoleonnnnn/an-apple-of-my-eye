@@ -152,3 +152,8 @@ body {
     display: none;
   }
 }
+
+[data-idle] *,
+[data-idle] *::after {
+  animation: none !important;
+}

@@ -1,4 +1,5 @@
 import BackgroundShift from "@/components/global/BackgroundShift";
+import OffscreenPause from "@/components/global/OffscreenPause";
 import LilyStem from "@/components/global/LilyStem";
 import PetalCanvas from "@/components/global/PetalCanvas";
 import ProgressBar from "@/components/global/ProgressBar";
@@ -38,6 +39,7 @@ export default function Home() {
         <Closing />
       </main>
       <BackgroundShift />
+      <OffscreenPause />
     </>
   );
 }

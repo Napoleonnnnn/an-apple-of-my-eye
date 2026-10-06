@@ -25,3 +25,8 @@ export const LILY_BLOOM = "lily-bloom";
 export const LILY_CLOSE = "lily-close";
 
 export const clamp = (v: number, min: number, max: number) => Math.min(max, Math.max(min, v));
+
+const isPhone = () => typeof window !== "undefined" && window.matchMedia("(max-width: 767px)").matches;
+
+export const blurFrom = (px: number) => (isPhone() ? {} : { filter: `blur(${px}px)` });
+export const blurTo = () => (isPhone() ? {} : { filter: "blur(0px)" });

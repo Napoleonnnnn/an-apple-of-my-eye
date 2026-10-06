@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import Image from "next/image";
-import { gsap, useGSAP } from "@/lib/gsap";
+import { gsap, useGSAP, whileVisible } from "@/lib/gsap";
 import { content } from "@/lib/content";
 import { MOTION_OK_QUERY } from "@/lib/motion-utils";
 
@@ -40,7 +40,10 @@ export default function Ruler() {
       const mm = gsap.matchMedia();
       mm.add(MOTION_OK_QUERY, () => {
         const q = gsap.utils.selector(sectionRef);
-        gsap.to(q(".flame"), { scaleY: 1.25, scaleX: 0.85, duration: 0.35, yoyo: true, repeat: -1, ease: "sine.inOut", transformOrigin: "50% 100%" });
+        whileVisible(
+          gsap.to(q(".flame"), { scaleY: 1.25, scaleX: 0.85, duration: 0.35, yoyo: true, repeat: -1, ease: "sine.inOut", transformOrigin: "50% 100%" }),
+          sectionRef.current,
+        );
 
         gsap
           .timeline({
@@ -54,7 +57,7 @@ export default function Ruler() {
               anticipatePin: 1,
             },
           })
-          .from(q(".ruler-word"), { opacity: 0, y: 30, rotate: "random(-12, 12)", stagger: 0.08, duration: 0.3, ease: "back.out(2)" })
+          .from(q(".ruler-word"), { force3D: false, opacity: 0, y: 30, rotate: "random(-12, 12)", stagger: 0.08, duration: 0.3, ease: "back.out(2)" })
           .from(q(".wall"), { opacity: 0, y: 60, duration: 0.3 }, 0)
 
           .fromTo(q(".grow-bar"), { height: "10%" }, { height: "86%", duration: 1.2, ease: "power1.in" }, 0.3)

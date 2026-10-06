@@ -5,7 +5,7 @@ import { gsap, useGSAP } from "@/lib/gsap";
 import Lily from "@/components/lily/Lily";
 import FloatingDecor, { type DecorItem } from "@/components/ui/FloatingDecor";
 import { content } from "@/lib/content";
-import { MOTION_OK_QUERY } from "@/lib/motion-utils";
+import { MOTION_OK_QUERY, blurFrom } from "@/lib/motion-utils";
 
 const { lines } = content.note;
 
@@ -68,7 +68,7 @@ export default function Note() {
           gsap.from(line, {
             opacity: 0,
             y: 16,
-            filter: "blur(5px)",
+            ...blurFrom(5),
             ease: "power1.out",
             scrollTrigger: { trigger: line, start: "top 88%", end: "top 62%", scrub: true },
           });

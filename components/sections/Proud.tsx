@@ -1,9 +1,9 @@
 "use client";
 
 import { useRef } from "react";
-import { gsap, useGSAP } from "@/lib/gsap";
+import { gsap, useGSAP, whileVisible } from "@/lib/gsap";
 import { content } from "@/lib/content";
-import { MOTION_OK_QUERY, burstPetals } from "@/lib/motion-utils";
+import { MOTION_OK_QUERY, burstPetals, blurFrom } from "@/lib/motion-utils";
 
 const { proud, proudNote } = content.journey;
 const words = proud.split(" ");
@@ -32,10 +32,19 @@ export default function Proud() {
               },
             },
           })
-          .from(q(".proud-letter"), { yPercent: 120, scale: 0.4, rotate: "random(-30, 30)", opacity: 0, ease: "back.out(2)", stagger: 0.05, duration: 0.4 })
+          .from(q(".proud-letter"), {
+            force3D: false,
+            yPercent: 120,
+            scale: 0.4,
+            rotate: "random(-30, 30)",
+            opacity: 0,
+            ease: "back.out(2)",
+            stagger: 0.05,
+            duration: 0.4,
+          })
           .from(q(".proud-star"), { scale: 0, rotate: -120, opacity: 0, stagger: 0.08, duration: 0.25, ease: "back.out(3)" }, ">-0.15")
-          .from(q(".proud-note"), { opacity: 0, y: 16, filter: "blur(5px)", duration: 0.3 }, "<");
-        gsap.to(q(".proud-star"), { rotation: 90, duration: 2.6, repeat: -1, ease: "none", stagger: 0.5 });
+          .from(q(".proud-note"), { opacity: 0, y: 16, ...blurFrom(5), duration: 0.3 }, "<");
+        whileVisible(gsap.to(q(".proud-star"), { rotation: 90, duration: 2.6, repeat: -1, ease: "none", stagger: 0.5 }), sectionRef.current);
       });
     },
     { scope: sectionRef },

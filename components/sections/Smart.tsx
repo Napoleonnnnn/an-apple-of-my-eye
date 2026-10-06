@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import { gsap, useGSAP } from "@/lib/gsap";
 import { content } from "@/lib/content";
-import { MOTION_OK_QUERY } from "@/lib/motion-utils";
+import { MOTION_OK_QUERY, blurFrom } from "@/lib/motion-utils";
 
 const text = content.messages.smart;
 const words = text.split(" ");
@@ -73,7 +73,7 @@ export default function Smart() {
               anticipatePin: 1,
             },
           })
-          .from(q(".ink-word"), { opacity: 0, y: 12, filter: "blur(4px)", stagger: 0.12, duration: 0.3 })
+          .from(q(".ink-word"), { opacity: 0, y: 12, ...blurFrom(4), stagger: 0.12, duration: 0.3 })
           .from(q(".highlight"), { scaleX: 0, duration: 0.35, ease: "power1.inOut" })
           .to(q(".circle-path"), { strokeDashoffset: 0, duration: 0.45, ease: "power1.inOut" })
           .to(q(".underline-path"), { strokeDashoffset: 0, duration: 0.3 })

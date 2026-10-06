@@ -12,7 +12,10 @@ export default function BackgroundShift() {
         start: "top 55%",
         end: "bottom 55%",
         onToggle: (self) => {
-          if (self.isActive) gsap.to(root, { "--page-bg": section.dataset.bg, duration: 0.9, ease: "power2.out", overwrite: true });
+          if (!self.isActive) return;
+          const color = section.dataset.bg!;
+          root.style.setProperty("--page-bg", color);
+          gsap.to([root, document.body], { backgroundColor: color, duration: 0.9, ease: "power2.out", overwrite: true });
         },
       }),
     );

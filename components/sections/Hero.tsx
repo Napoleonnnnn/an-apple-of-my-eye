@@ -4,7 +4,7 @@ import { useRef } from "react";
 import { motion } from "motion/react";
 import { gsap, useGSAP } from "@/lib/gsap";
 import { content } from "@/lib/content";
-import { MOTION_OK_QUERY } from "@/lib/motion-utils";
+import { MOTION_OK_QUERY, blurFrom } from "@/lib/motion-utils";
 
 const { title, subtitle, hint } = content.hero;
 const LETTER_DELAY = 0.055;
@@ -26,6 +26,7 @@ export default function Hero() {
         const scroll = (end: string) => ({ trigger: sectionRef.current, start: "top top", end, scrub: 0.6 });
 
         gsap.to(".hero-letter", {
+          force3D: false,
           x: "random(-150, 150)",
           y: "random(-280, -90)",
           rotation: "random(-80, 80)",
@@ -36,7 +37,7 @@ export default function Hero() {
           scrollTrigger: scroll("70% top"),
         });
         gsap.to(".hero-underline", { opacity: 0, scaleX: 0.3, ease: "power1.in", scrollTrigger: scroll("35% top") });
-        gsap.to(".hero-sub", { opacity: 0, y: -40, filter: "blur(8px)", ease: "none", scrollTrigger: scroll("45% top") });
+        gsap.to(".hero-sub", { opacity: 0, y: -40, ...blurFrom(8), ease: "none", scrollTrigger: scroll("45% top") });
         gsap.to(bodyRef.current, { yPercent: -18, ease: "none", scrollTrigger: scroll("bottom top") });
         gsap.to(".hero-blob", { yPercent: (i) => (i ? -60 : 50), scale: 1.4, ease: "none", scrollTrigger: scroll("bottom top") });
         gsap.to(hintRef.current, {
@@ -98,8 +99,8 @@ export default function Hero() {
         <div className="hero-sub">
           <motion.p
             className="mx-auto mt-7 max-w-[20rem] text-lg leading-relaxed text-balance text-cocoa md:max-w-md md:text-xl"
-            initial={{ opacity: 0, y: 14, filter: "blur(4px)" }}
-            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, delay: underlineDelay + 0.4, ease: [0.22, 1, 0.36, 1] }}
           >
             {subtitle}

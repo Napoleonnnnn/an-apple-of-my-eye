@@ -1,8 +1,10 @@
 export const content = {
+  tabTitle: "hbd to my favorite person",
+
   hero: {
     title: "hbd Nandaaa Noviraaa",
     subtitle: 'tiba" dah tanggal 10, makin tua ya ke akwoako',
-    hint: "my fav person (aaaaak)",
+    hint: 'scroll pelan" ya my fav person (eakkk)',
   },
 
   ruler: "umur doang nambah tingginya kapan",

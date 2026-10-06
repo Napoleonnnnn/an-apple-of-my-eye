@@ -16,7 +16,7 @@ const karla = Karla({
 });
 
 export const metadata: Metadata = {
-  title: content.hero.title,
+  title: content.tabTitle,
 };
 
 export const viewport: Viewport = {
