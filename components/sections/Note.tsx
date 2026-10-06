@@ -123,11 +123,24 @@ export default function Note() {
           <span aria-hidden className="absolute -top-3 left-6 h-6 w-20 -rotate-6 rounded-sm bg-blush/85 shadow-sm" />
           <span aria-hidden className="absolute -top-3 right-6 h-6 w-16 rotate-[8deg] rounded-sm bg-[#E3EDD5]/90 shadow-sm" />
           <div className="font-display pt-8 text-[1.2rem] leading-8 text-maroon md:text-[1.3rem]">
-            {lines.map((line, i) => (
-              <p key={i} className="note-line mb-8 last:mb-0 whitespace-pre-line">
-                {line}
-              </p>
-            ))}
+            {lines.map((line, i) => {
+              const bullet = line.startsWith("- ");
+              const nextIsBullet = lines[i + 1]?.startsWith("- ");
+              if (bullet)
+                return (
+                  <p key={i} className={`note-line flex gap-2.5 text-[0.95em] ${nextIsBullet ? "mb-0" : "mb-8"}`}>
+                    <svg viewBox="0 0 24 24" aria-hidden className="mt-[0.55em] size-[0.7em] shrink-0">
+                      <path d="M12 2 C 19 6, 20 14, 12 22 C 4 14, 5 6, 12 2Z" fill="#F4A3B9" />
+                    </svg>
+                    <span>{line.slice(2)}</span>
+                  </p>
+                );
+              return (
+                <p key={i} className={`note-line whitespace-pre-line ${nextIsBullet ? "mb-4" : "mb-8"} last:mb-0`}>
+                  {line}
+                </p>
+              );
+            })}
           </div>
           <Lily aria-hidden className="absolute right-5 bottom-4 size-10 rotate-12 opacity-90" />
         </div>
