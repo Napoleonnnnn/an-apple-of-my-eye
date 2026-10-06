@@ -57,7 +57,7 @@ export const content = {
   },
 
   note: {
-    lines: ["Intinya, selamat ulang tahun yaaa princess, yang baik, cantik, pintar, imut , pendek, suka seafood, suka daging, suka jajan, suka seblak, suka cheese cake, suka warna pink, maroon dan brown, specially pinknya yang hexa #FFD6E0, suka buah nanas mangga anggur, mangga top 1 kalo udah dikupas, suka buku dari keigo higashino, suka anime genre mistery, action, romance and sport (kalo artnya bagus), yang suka jus semangka and mangga (top two kalo jus), yang suka matcha (top one kalo non jus), yang love languagenya quality time and giving gift, and suka banget di act of service   wish you all all all all all all the besstttt."],
+    lines: ["Intinya, selamat ulang tahun yaaa princess, yang pintar, baik, cantik, imut, pendek, suka foto, suka mekap, suka seafood, suka daging, suka jajan, suka seblak, suka cheese cake, suka warna pink, maroon dan brown, specially pinknya yang hexa #FFD6E0, suka buah nanas, mangga & anggur, mangga top 1 kalo udah dikupas, suka buku dari keigo higashino, suka anime genre mistery, action, romance and sport (kalo artnya bagus), anime favnya haikyuu, yang suka jus semangka and mangga (top two kalo jus), yang suka matcha (top one kalo non jus), suka F1, yang love languagenya quality time and giving gift, and feeling loved through acts of service.   wish you all all all all all all the besstttt."],
   },
 
   closing: {
