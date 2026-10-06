@@ -1,22 +1,23 @@
 "use client";
 
 import { useRef } from "react";
-import { gsap, useGSAP } from "@/lib/gsap";
+import { gsap, useGSAP, whileVisible } from "@/lib/gsap";
 import Lily from "@/components/lily/Lily";
-import { MOTION_OK_QUERY } from "@/lib/motion-utils";
+import Favorite, { type FavoriteKind } from "@/components/ui/Favorites";
+import { MOTION_OK_QUERY, burstPetals, clamp, scrollState } from "@/lib/motion-utils";
 
-type Kind = "petal" | "sparkle" | "lily" | "leaf" | "dot";
+type Kind = "petal" | "sparkle" | "lily" | "leaf" | "dot" | FavoriteKind;
 export type DecorItem = {
   kind: Kind;
-
   x: number;
   y: number;
   size: number;
-
   depth: number;
   rotate?: number;
   hideOnMobile?: boolean;
 };
+
+const FAVORITES = new Set<Kind>(["camera", "pineapple", "f1", "mirror", "compact", "matcha", "swatch", "seblak", "cake", "book", "moon", "phone"]);
 
 function Shape({ kind }: { kind: Kind }) {
   switch (kind) {
@@ -44,6 +45,8 @@ function Shape({ kind }: { kind: Kind }) {
       return <Lily className="size-full" />;
     case "dot":
       return <span className="block size-full rounded-full bg-blush" />;
+    default:
+      return <Favorite kind={kind} />;
   }
 }
 
@@ -56,7 +59,7 @@ export default function FloatingDecor({ items }: { items: DecorItem[] }) {
       mm.add(MOTION_OK_QUERY, () => {
         const els = gsap.utils.toArray<HTMLElement>(".decor", ref.current);
         els.forEach((el, i) => {
-          const depth = items[i].depth;
+          const depth = FAVORITES.has(items[i].kind) ? items[i].depth * 0.55 : items[i].depth;
           gsap.fromTo(
             el,
             { y: depth * 160, rotation: (items[i].rotate ?? 0) - depth * 60 },
@@ -68,22 +71,68 @@ export default function FloatingDecor({ items }: { items: DecorItem[] }) {
             },
           );
         });
+        const pops = gsap.utils.toArray<HTMLElement>(".fav-in", ref.current);
+        if (pops.length) {
+          gsap.fromTo(
+            pops,
+            { scale: 0, rotation: -200 },
+            {
+              scale: 1,
+              rotation: 0,
+              duration: 0.9,
+              ease: "back.out(1.8)",
+              stagger: 0.15,
+              scrollTrigger: { trigger: ref.current, start: "top 75%", toggleActions: "play none none reverse" },
+            },
+          );
+          const wobble = gsap.quickTo(pops, "skewX", { duration: 0.5, ease: "power3.out" });
+          const tick = () => wobble(clamp(scrollState.velocity * 0.5, -12, 12));
+          whileVisible(gsap.to({}, { duration: 1, repeat: -1, onUpdate: tick }), ref.current);
+        }
       });
     },
     { scope: ref },
   );
 
+  const onTap = (e: React.PointerEvent<HTMLButtonElement>) => {
+    const inner = e.currentTarget.firstElementChild;
+    if (inner)
+      gsap.fromTo(
+        inner,
+        { rotation: 0, scale: 1 },
+        { rotation: 360, scale: 1.25, duration: 0.6, ease: "back.out(2)", yoyo: false, onComplete: () => gsap.set(inner, { scale: 1 }) },
+      );
+    burstPetals({ x: e.clientX, y: e.clientY, count: 8, power: 3 });
+  };
+
   return (
     <div ref={ref} aria-hidden className="pointer-events-none absolute inset-0 -z-10">
-      {items.map((it, i) => (
-        <div
-          key={i}
-          className={`decor absolute ${it.hideOnMobile ? "hidden md:block" : ""}`}
-          style={{ left: `${it.x}%`, top: `${it.y}%`, width: it.size, height: it.size, rotate: `${it.rotate ?? 0}deg` }}
-        >
-          <Shape kind={it.kind} />
-        </div>
-      ))}
+      {items.map((it, i) => {
+        const fav = FAVORITES.has(it.kind);
+        return (
+          <div
+            key={i}
+            className={`decor absolute ${it.hideOnMobile ? "hidden md:block" : ""}`}
+            style={{
+              left: `max(6px, min(${it.x}%, calc(100% - ${(fav ? Math.round(it.size * 1.25) : it.size) + 8}px)))`,
+              top: `${it.y}%`,
+              width: fav ? Math.round(it.size * 1.25) : it.size,
+              height: fav ? Math.round(it.size * 1.25) : it.size,
+              rotate: `${it.rotate ?? 0}deg`,
+            }}
+          >
+            {fav ? (
+              <button type="button" tabIndex={-1} onPointerDown={onTap} className="pointer-events-auto block size-full cursor-pointer rounded-full">
+                <span className="fav-in block size-full drop-shadow-[0_6px_8px_rgba(110,31,46,0.22)]">
+                  <Shape kind={it.kind} />
+                </span>
+              </button>
+            ) : (
+              <Shape kind={it.kind} />
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 }

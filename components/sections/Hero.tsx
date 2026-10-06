@@ -5,6 +5,7 @@ import { motion } from "motion/react";
 import { gsap, useGSAP } from "@/lib/gsap";
 import { content } from "@/lib/content";
 import { MOTION_OK_QUERY, blurFrom } from "@/lib/motion-utils";
+import FloatingDecor from "@/components/ui/FloatingDecor";
 
 const { title, subtitle, hint } = content.hero;
 const LETTER_DELAY = 0.055;
@@ -54,7 +55,17 @@ export default function Hero() {
   let letterIndex = 0;
 
   return (
-    <section data-bg="#FFF8F2" ref={sectionRef} className="relative flex min-h-[100svh] flex-col items-center justify-center overflow-hidden px-6 text-center">
+    <section
+      data-bg="#FFF8F2"
+      ref={sectionRef}
+      className="relative z-10 flex min-h-[100svh] flex-col items-center justify-center overflow-hidden px-6 text-center"
+    >
+      <FloatingDecor
+        items={[
+          { kind: "pineapple", x: 5, y: 74, size: 46, depth: 0.3, rotate: -12 },
+          { kind: "matcha", x: 84, y: 20, size: 44, depth: -0.5, rotate: 10 },
+        ]}
+      />
       <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
         <div className="hero-blob absolute top-[12%] -left-24 size-72">
           <div className="float-blob size-full rounded-full bg-blush/70 blur-3xl" style={{ animation: "float-blob 9s ease-in-out infinite" }} />

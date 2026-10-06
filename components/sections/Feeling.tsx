@@ -5,6 +5,7 @@ import { gsap, useGSAP, whileVisible } from "@/lib/gsap";
 import Lily from "@/components/lily/Lily";
 import { content } from "@/lib/content";
 import { MOTION_OK_QUERY } from "@/lib/motion-utils";
+import FloatingDecor from "@/components/ui/FloatingDecor";
 
 const text = content.messages.feeling;
 const words = text.split(" ");
@@ -79,6 +80,12 @@ export default function Feeling() {
 
   return (
     <section ref={sectionRef} data-bg="#FCEBF0" data-stem-leaf className="relative z-10 flex min-h-[115svh] items-center justify-center px-5 py-24">
+      <FloatingDecor
+        items={[
+          { kind: "swatch", x: 86, y: 8, size: 40, depth: -0.6, rotate: 12 },
+          { kind: "compact", x: 5, y: 86, size: 40, depth: 0.4, rotate: 12 },
+        ]}
+      />
       <div
         onPointerDown={onTap}
         className="pond relative aspect-square w-[min(90vw,460px)] cursor-pointer touch-manipulation overflow-hidden rounded-full shadow-[inset_0_-14px_40px_rgb(244_163_185/0.55),inset_0_10px_30px_rgb(255_255_255/0.9),0_30px_60px_-25px_rgb(110_31_46/0.35)]"

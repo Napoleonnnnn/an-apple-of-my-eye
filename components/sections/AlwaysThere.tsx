@@ -5,6 +5,7 @@ import { gsap, useGSAP, whileVisible } from "@/lib/gsap";
 import Lily from "@/components/lily/Lily";
 import { content } from "@/lib/content";
 import { MOTION_OK_QUERY, burstPetals, blurFrom } from "@/lib/motion-utils";
+import FloatingDecor from "@/components/ui/FloatingDecor";
 
 const { line, flag } = content.alwaysThere;
 
@@ -81,6 +82,12 @@ export default function AlwaysThere() {
 
   return (
     <section ref={sectionRef} data-bg="#F1F6EC" data-stem-leaf className="relative z-10 flex flex-col items-center gap-24 px-6 py-28 md:gap-32 md:py-36">
+      <FloatingDecor
+        items={[
+          { kind: "moon", x: 86, y: 6, size: 40, depth: -0.4, rotate: 6 },
+          { kind: "f1", x: 4, y: 2, size: 48, depth: 0.4, rotate: -4 },
+        ]}
+      />
       <div className="rain-scene flex w-full max-w-md flex-col items-center gap-8">
         <div aria-hidden className="relative h-64 w-64">
           <div className="cloud absolute -top-9 left-1/2 h-16 w-44 -translate-x-1/2">

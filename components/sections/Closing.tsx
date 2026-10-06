@@ -1,9 +1,10 @@
 "use client";
 
 import { useRef } from "react";
-import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
+import { gsap, useGSAP } from "@/lib/gsap";
 import Lily from "@/components/lily/Lily";
 import LockedLink from "@/components/ui/LockedLink";
+import Chase from "@/components/ui/Chase";
 import FloatingDecor, { type DecorItem } from "@/components/ui/FloatingDecor";
 import { content } from "@/lib/content";
 import { LILY_BLOOM, LILY_CLOSE, MOTION_OK_QUERY, burstPetals } from "@/lib/motion-utils";
@@ -11,6 +12,7 @@ import { LILY_BLOOM, LILY_CLOSE, MOTION_OK_QUERY, burstPetals } from "@/lib/moti
 const { lines, button } = content.closing;
 
 const DECOR: DecorItem[] = [
+  { kind: "phone", x: 86, y: 74, size: 36, depth: 0.3, rotate: -10 },
   { kind: "sparkle", x: 8, y: 18, size: 16, depth: -0.7 },
   { kind: "sparkle", x: 90, y: 30, size: 12, depth: 0.8 },
   { kind: "petal", x: 6, y: 74, size: 20, depth: 0.6 },
@@ -62,20 +64,20 @@ export default function Closing() {
 
         const breathe = gsap.to(lilyRef.current, { rotate: 4, duration: 3, ease: "sine.inOut", yoyo: true, repeat: -1, paused: true });
 
-        ScrollTrigger.create({
-          trigger: sectionRef.current,
-          start: "top 12%",
-          onEnter: () => {
-            window.dispatchEvent(new Event(LILY_BLOOM));
-            tl.timeScale(1).play();
-            breathe.play();
-          },
-          onLeaveBack: () => {
-            window.dispatchEvent(new Event(LILY_CLOSE));
-            tl.timeScale(2.5).reverse();
-            breathe.pause();
-          },
-        });
+        const onBloom = () => {
+          tl.timeScale(1).play();
+          breathe.play();
+        };
+        const onClose = () => {
+          tl.timeScale(2.5).reverse();
+          breathe.pause();
+        };
+        window.addEventListener(LILY_BLOOM, onBloom);
+        window.addEventListener(LILY_CLOSE, onClose);
+        return () => {
+          window.removeEventListener(LILY_BLOOM, onBloom);
+          window.removeEventListener(LILY_CLOSE, onClose);
+        };
       });
     },
     { scope: sectionRef },
@@ -89,6 +91,7 @@ export default function Closing() {
       className="relative z-10 flex min-h-[100svh] flex-col items-center px-6 pt-[9svh] pb-[8svh] text-center"
     >
       <FloatingDecor items={DECOR} />
+      <Chase />
       <div className="relative aspect-square w-[min(72vw,320px)]">
         <div ref={lilyRef} className="big-lily size-full">
           <Lily glow className="size-full overflow-visible drop-shadow-[0_14px_22px_rgba(110,31,46,0.16)]" />

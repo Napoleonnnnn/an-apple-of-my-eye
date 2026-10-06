@@ -5,6 +5,7 @@ import Image from "next/image";
 import { gsap, useGSAP, whileVisible } from "@/lib/gsap";
 import { content } from "@/lib/content";
 import { MOTION_OK_QUERY } from "@/lib/motion-utils";
+import FloatingDecor from "@/components/ui/FloatingDecor";
 
 const text = content.ruler;
 const words = text.split(" ");
@@ -14,7 +15,7 @@ const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 function Photo() {
   return (
     <span className="block size-full overflow-hidden rounded-[42%] border-[3px] border-white bg-blush shadow-soft">
-      <Image src={`${BASE_PATH}/images/kitty.jpeg`} alt="" width={160} height={160} className="size-full object-cover object-[50%_45%]" />
+      <Image src={`${BASE_PATH}/images/kitty.webp`} alt="" width={160} height={160} className="size-full object-cover object-[50%_45%]" />
     </span>
   );
 }
@@ -76,6 +77,12 @@ export default function Ruler() {
 
   return (
     <section ref={sectionRef} data-bg="#F6F1FA" data-stem-leaf className="relative z-10">
+      <FloatingDecor
+        items={[
+          { kind: "phone", x: 86, y: 72, size: 40, depth: 0.5, rotate: 14 },
+          { kind: "mirror", x: 4, y: 4, size: 40, depth: -0.4, rotate: -10 },
+        ]}
+      />
       <div ref={stageRef} className="flex h-[100svh] flex-col items-center justify-center gap-8 px-6 pt-10">
         <h2
           className="font-display max-w-md text-center text-[clamp(1.9rem,8.5vw,3.2rem)] leading-tight font-medium text-balance text-maroon"

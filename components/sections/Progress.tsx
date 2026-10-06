@@ -6,6 +6,7 @@ import SectionTitle from "@/components/ui/SectionTitle";
 import Lily from "@/components/lily/Lily";
 import { content } from "@/lib/content";
 import { MOTION_OK_QUERY, burstPetals } from "@/lib/motion-utils";
+import FloatingDecor from "@/components/ui/FloatingDecor";
 
 export default function Progress() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -45,6 +46,12 @@ export default function Progress() {
 
   return (
     <section ref={sectionRef} data-bg="#FFF6EA" data-stem-leaf className="relative z-10 flex min-h-[90svh] flex-col items-center justify-center px-6 py-24">
+      <FloatingDecor
+        items={[
+          { kind: "seblak", x: 5, y: 80, size: 48, depth: 0.5, rotate: -6 },
+          { kind: "f1", x: 80, y: 82, size: 50, depth: -0.4 },
+        ]}
+      />
       <SectionTitle>{content.messages.random}</SectionTitle>
 
       <div aria-hidden className="bar relative mx-auto mt-14 w-full max-w-md">

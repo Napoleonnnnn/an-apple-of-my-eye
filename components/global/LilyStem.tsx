@@ -203,6 +203,12 @@ export default function LilyStem() {
     };
     const raf = requestAnimationFrame(measure);
     ScrollTrigger.addEventListener("refresh", measure);
+    let resizeTimer = 0;
+    const onWindowResize = () => {
+      window.clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(measure, 200);
+    };
+    window.addEventListener("resize", onWindowResize);
 
     let timer = 0;
     const ro = new ResizeObserver(() => {
@@ -213,6 +219,8 @@ export default function LilyStem() {
 
     return () => {
       ScrollTrigger.removeEventListener("refresh", measure);
+      window.removeEventListener("resize", onWindowResize);
+      window.clearTimeout(resizeTimer);
       ro.disconnect();
       window.clearTimeout(timer);
       cancelAnimationFrame(raf);
@@ -256,11 +264,21 @@ export default function LilyStem() {
 
     const budScale = layout.mobile ? 0.72 : 1;
     let tip = sampleAt(layout, layout.startY);
+    let bloomed = false;
     let prevX = tip.x;
 
     const update = (progress: number) => {
       tip = sampleAt(layout, layout.startY + (layout.endY - layout.startY) * progress);
       stemState.tipY = tip.t;
+      const arrived = tip.t >= layout.endY - 40;
+      const left = tip.t < layout.endY - 140;
+      if (arrived && !bloomed) {
+        bloomed = true;
+        window.dispatchEvent(new Event(LILY_BLOOM));
+      } else if (left && bloomed) {
+        bloomed = false;
+        window.dispatchEvent(new Event(LILY_CLOSE));
+      }
       parts.forEach((part, k) => setPart(k, tip.len - layout.lens[part.c.i0]));
       layout.leaves.forEach((leaf, i) => {
         const g = tip.t > leaf.y + 8;
@@ -275,8 +293,14 @@ export default function LilyStem() {
       });
     };
 
-    const st = ScrollTrigger.create({ start: 0, end: "max", onUpdate: (self) => update(self.progress) });
-    update(st.progress);
+    const liveProgress = () => {
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      return max > 0 ? clamp(window.scrollY / max, 0, 1) : 0;
+    };
+    const st = ScrollTrigger.create({ start: 0, end: "max", onUpdate: () => update(liveProgress()) });
+    const onResize = () => update(liveProgress());
+    window.addEventListener("resize", onResize);
+    update(liveProgress());
 
     let theta = 0;
     let omega = 0;
@@ -302,6 +326,7 @@ export default function LilyStem() {
 
     return () => {
       st.kill();
+      window.removeEventListener("resize", onResize);
       gsap.ticker.remove(tick);
       gsap.killTweensOf(leaves);
       window.removeEventListener(LILY_BLOOM, onBloom);

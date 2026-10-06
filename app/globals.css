@@ -157,3 +157,97 @@ body {
 [data-idle] *::after {
   animation: none !important;
 }
+
+.fav * {
+  transform-box: fill-box;
+}
+.fav-bounce { transform-origin: 50% 100%; animation: fav-bounce 1.6s cubic-bezier(.3,0,.4,1) infinite; }
+.fav-shadow { transform-origin: 50% 50%; animation: fav-shadow 1.6s cubic-bezier(.3,0,.4,1) infinite; }
+.fav-leaf { transform-origin: 0% 50%; animation: fav-wiggle 1.2s ease-in-out infinite; }
+.fav-straw { transform-origin: 50% 100%; animation: fav-wiggle 2.2s ease-in-out infinite; }
+.fav-ice { animation: fav-bob 2.4s ease-in-out infinite; }
+.fav-ice-2 { animation-delay: -1.2s; }
+.fav-bubble { animation: fav-rise 2.6s ease-in infinite; }
+.fav-bubble-2 { animation-delay: -1.3s; }
+.fav-ripple { transform-origin: 50% 50%; animation: fav-ripple 2.4s ease-out infinite; }
+.fav-ripple-2 { animation-delay: -1.2s; }
+.fav-tilt { transform-origin: 50% 100%; animation: fav-wiggle 3s ease-in-out infinite; }
+.fav-pulse { transform-origin: 50% 50%; animation: fav-pulse 2.4s ease-in-out infinite; }
+.fav-steam { animation: fav-steam 2.4s ease-out infinite; }
+.fav-steam-2 { animation-delay: -0.8s; }
+.fav-steam-3 { animation-delay: -1.6s; }
+.fav-chili { transform-origin: 0% 50%; animation: fav-hop 1.8s ease-in-out infinite; }
+.fav-cherry { transform-origin: 50% 100%; animation: fav-hop 1.4s cubic-bezier(.3,0,.4,1) infinite; }
+.fav-page { transform-origin: 0% 50%; animation: fav-page 3.6s ease-in-out infinite; }
+.fav-rock { transform-origin: 50% 50%; animation: fav-wiggle 4s ease-in-out infinite; }
+.fav-twinkle { transform-origin: 50% 50%; animation: fav-twinkle 1.8s ease-in-out infinite; }
+.fav-twinkle-2 { animation-delay: -0.6s; }
+.fav-twinkle-3 { animation-delay: -1.2s; }
+.fav-buzz { transform-origin: 50% 50%; animation: fav-buzz 3.2s linear infinite; }
+.fav-notif { transform-origin: 80% 100%; animation: fav-notif 3.2s ease-out infinite; }
+
+@keyframes fav-bounce { 0%,100% { transform: translateY(0) scale(1.06, 0.94); } 15% { transform: translateY(0) scale(1); } 50% { transform: translateY(-9px) scale(0.97, 1.03); } }
+@keyframes fav-shadow { 0%,100% { transform: scaleX(1); opacity: .14; } 50% { transform: scaleX(0.6); opacity: .06; } }
+@keyframes fav-wiggle { 0%,100% { transform: rotate(-7deg); } 50% { transform: rotate(7deg); } }
+@keyframes fav-bob { 0%,100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-4px) rotate(14deg); } }
+@keyframes fav-rise { 0% { transform: translateY(0); opacity: 0; } 20% { opacity: .9; } 100% { transform: translateY(-26px); opacity: 0; } }
+@keyframes fav-ripple { 0% { transform: scale(0.6); opacity: .9; } 100% { transform: scale(3); opacity: 0; } }
+@keyframes fav-pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.08); } }
+@keyframes fav-steam { 0% { transform: translateY(6px); opacity: 0; } 30% { opacity: .9; } 100% { transform: translateY(-10px); opacity: 0; } }
+@keyframes fav-hop { 0%,60%,100% { transform: translateY(0) rotate(0); } 75% { transform: translateY(-7px) rotate(-12deg); } 88% { transform: translateY(0) rotate(4deg); } }
+@keyframes fav-page { 0%,35% { transform: scaleX(1); } 55% { transform: scaleX(-1); } 75%,100% { transform: scaleX(1); } }
+@keyframes fav-twinkle { 0%,100% { transform: scale(0.6) rotate(0); opacity: .5; } 50% { transform: scale(1.3) rotate(45deg); opacity: 1; } }
+@keyframes fav-buzz { 0%,70%,100% { transform: translateX(0) rotate(0); } 72%,76%,80%,84% { transform: translateX(-2px) rotate(-5deg); } 74%,78%,82%,86% { transform: translateX(2px) rotate(5deg); } }
+@keyframes fav-notif { 0%,72% { transform: translateY(8px) scale(0.4); opacity: 0; } 80% { transform: translateY(0) scale(1.05); opacity: 1; } 95% { transform: translateY(0) scale(1); opacity: 1; } 100% { transform: translateY(-4px); opacity: 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .fav * { animation: none !important; }
+}
+
+.fav-crown { transform-origin: 50% 100%; animation: fav-wiggle 1.4s ease-in-out infinite; }
+.fav-drive { animation: fav-drive 2.6s ease-in-out infinite; }
+.fav-wheel { transform-origin: 50% 50%; animation: fav-spin 0.5s linear infinite; }
+.fav-speedlines { animation: fav-speed 2.6s ease-in-out infinite; }
+.fav-lid { transform-origin: 50% 100%; animation: fav-lid 3.2s ease-in-out infinite; }
+.fav-puff { transform-origin: 50% 50%; animation: fav-puff 3.2s ease-in-out infinite; }
+
+@keyframes fav-drive { 0%,100% { transform: translateX(-3px); } 40% { transform: translateX(5px) rotate(-2deg); } 55% { transform: translateX(4px) rotate(1deg); } }
+@keyframes fav-spin { to { transform: rotate(360deg); } }
+@keyframes fav-speed { 0%,100% { transform: translateX(2px); opacity: .3; } 40% { transform: translateX(-4px); opacity: 1; } }
+@keyframes fav-lid { 0%,20%,100% { transform: translateY(18px) scaleY(0.25); } 40%,80% { transform: translateY(0) scaleY(1); } }
+@keyframes fav-puff { 0%,40%,80%,100% { transform: translate(0,0); } 55% { transform: translate(-8px,1px); } 68% { transform: translate(4px,0); } }
+
+.fav-shine { animation: fav-shine 3s ease-in-out infinite; }
+@keyframes fav-shine { 0%,55% { transform: translateX(-26px); } 85%,100% { transform: translateX(30px); } }
+
+.runner { transform: translateX(-240px); visibility: hidden; will-change: transform; }
+.runner-body { animation: runner-bob 0.32s ease-in-out infinite alternate; transform-origin: 50% 100%; }
+.runner-leg { transform-box: fill-box; transform-origin: 50% 0%; animation: runner-leg 0.32s ease-in-out infinite alternate; }
+.runner-leg-2 { animation-direction: alternate-reverse; }
+.runner-dust { animation: runner-dust 0.64s ease-out infinite; }
+.runner-dust-2 { animation-delay: -0.32s; }
+@keyframes runner-bob { from { translate: 0 0; } to { translate: 0 -6px; } }
+@keyframes runner-leg { from { transform: rotate(32deg); } to { transform: rotate(-32deg); } }
+@keyframes runner-dust { 0% { transform: translate(0, 0) scale(0.4); opacity: 0.9; } 100% { transform: translate(14px, -8px) scale(1.4); opacity: 0; } }
+.runner.slow .runner-body,
+.runner.slow .runner-leg {
+  animation-duration: 0.6s;
+}
+.sun-spin {
+  animation: fav-spin 9s linear infinite;
+}
+.runner.still .runner-body,
+.runner.still .runner-leg {
+  animation-play-state: paused;
+}
+.runner.still .runner-dust {
+  animation: none;
+  opacity: 0;
+}
+@media (prefers-reduced-motion: reduce) {
+  .runner, .runner * { animation: none !important; }
+}
+
+.fav-lens { transform-origin: 50% 50%; animation: fav-spin 6s linear infinite; }
+.fav-flash { transform-origin: 50% 50%; animation: fav-flash 3s ease-out infinite; }
+@keyframes fav-flash { 0%,82%,100% { transform: scale(0.2); opacity: 0; } 86% { transform: scale(1.4); opacity: 1; } 95% { transform: scale(2); opacity: 0; } }

@@ -4,6 +4,7 @@ import { useRef } from "react";
 import { gsap, useGSAP } from "@/lib/gsap";
 import { content } from "@/lib/content";
 import { MOTION_OK_QUERY, blurFrom, blurTo } from "@/lib/motion-utils";
+import FloatingDecor from "@/components/ui/FloatingDecor";
 
 const text = content.messages.kind;
 const words = text.split(" ");
@@ -45,6 +46,12 @@ export default function Kind() {
 
   return (
     <section ref={sectionRef} data-bg="#FFF1E4" data-stem-leaf className="relative z-10 h-[200svh]">
+      <FloatingDecor
+        items={[
+          { kind: "cake", x: 6, y: 62, size: 46, depth: 0.4, rotate: -8 },
+          { kind: "compact", x: 80, y: 6, size: 44, depth: -0.4, rotate: 8 },
+        ]}
+      />
       <div className="sticky top-0 flex h-[100svh] items-center justify-center overflow-hidden px-6">
         <div aria-hidden className="pointer-events-none absolute inset-0 flex items-center justify-center">
           <svg viewBox="-100 -100 200 200" className="rays absolute size-[150vmin] opacity-60">

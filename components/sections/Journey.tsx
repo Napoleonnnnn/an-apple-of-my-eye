@@ -13,6 +13,7 @@ const { title, steps } = content.journey;
 const N = steps.length;
 
 const DECOR: DecorItem[] = [
+  { kind: "pineapple", x: 82, y: 4, size: 44, depth: -0.4, rotate: 12 },
   { kind: "sparkle", x: 8, y: 10, size: 14, depth: 0.7 },
   { kind: "leaf", x: 4, y: 48, size: 28, depth: 0.6, rotate: 20 },
   { kind: "dot", x: 18, y: 86, size: 10, depth: 0.9 },

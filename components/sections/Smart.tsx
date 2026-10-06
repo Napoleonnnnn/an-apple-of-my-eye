@@ -4,6 +4,7 @@ import { useRef } from "react";
 import { gsap, useGSAP } from "@/lib/gsap";
 import { content } from "@/lib/content";
 import { MOTION_OK_QUERY, blurFrom } from "@/lib/motion-utils";
+import FloatingDecor from "@/components/ui/FloatingDecor";
 
 const text = content.messages.smart;
 const words = text.split(" ");
@@ -87,6 +88,13 @@ export default function Smart() {
 
   return (
     <section ref={sectionRef} data-bg="#FBF3E8" data-stem-leaf className="relative z-10">
+      <FloatingDecor
+        items={[
+          { kind: "book", x: 4, y: 18, size: 46, depth: -0.5, rotate: -10 },
+          { kind: "moon", x: 86, y: 82, size: 42, depth: 0.6, rotate: 8 },
+          { kind: "camera", x: 80, y: 6, size: 44, depth: -0.4, rotate: 10 },
+        ]}
+      />
       <div ref={stageRef} className="flex h-[100svh] items-center justify-center px-5">
         <div className="notebook relative w-full max-w-md -rotate-2 md:max-w-lg">
           <div aria-hidden className="absolute top-6 bottom-6 -left-3 z-10 flex flex-col justify-between">

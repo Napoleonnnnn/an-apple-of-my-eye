@@ -10,6 +10,8 @@ import { MOTION_OK_QUERY, blurFrom } from "@/lib/motion-utils";
 const { lines } = content.note;
 
 const DECOR: DecorItem[] = [
+  { kind: "book", x: 84, y: 40, size: 42, depth: -0.5, rotate: 8 },
+  { kind: "camera", x: 4, y: 6, size: 42, depth: 0.4, rotate: -10 },
   { kind: "petal", x: 6, y: 18, size: 20, depth: 0.8 },
   { kind: "sparkle", x: 90, y: 10, size: 14, depth: -0.7 },
   { kind: "lily", x: 3, y: 68, size: 34, depth: -0.6, rotate: 20 },

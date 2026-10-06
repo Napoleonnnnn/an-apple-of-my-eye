@@ -23,35 +23,45 @@ export const content = {
     strong: "nih liat achievement ke, gokil si. when yah",
   },
 
+  chat: [
+    { from: "her", text: "ihh imuttt" },
+    { from: "me", text: "kok imut si, call me cool" },
+    { from: "me", sticker: "cool" },
+    { from: "her", text: "cool apaan coba kek gini" },
+    { from: "her", sticker: "dia" },
+  ],
+
   journey: {
     title: "perjalanan ke",
 
     steps: [
+      { text: "nasional silver geografi", done: true },
+      { text: "juara pidato english nasional", done: true },
       { text: "kuliah di fk", done: true },
       { text: "awardee BU", done: true },
-      { text: "asisten anatomi, keren bet", done: true },
+      { text: "jadi asatom", done: true },
       { text: "udah sempro di semester 6", done: true },
-      { text: "sidang, bentar lagi. pasti bisa", done: false },
-      { text: "wisuda", done: false },
+      { text: "sidang bentar lagi. semangattt", done: false },
+      { text: "wisuda, bareng? hihihiha", done: false },
       { text: "spesialis mata?", done: false },
-      { text: "edinburgh, public health", done: false },
+      { text: "edinburgh, public health, aamiin", done: false },
     ],
 
-    proud: "proud of you",
-    proudNote: 'even capaian" mini',
+    proud: "soooo proud of youuuu",
+    proudNote: 'even capaian" ke yang mini yaa, and ......',
   },
 
   alwaysThere: {
-    line: "aku bakal selalu ada, even kalo ke sibuk or stress (gatau kenapa aku bilang ini disini, but yagitulah)",
-    flag: "that's not a redflag for me",
+    line: "aku bakal selalu ada waktu ke sibuk (ya walaupun online) . specially when you stressed out dan menghilang, isokeyyy you know",
+    flag: "that's totally not a redflag for me, i knew it's just your way to handle your stress and im fully respected it",
   },
 
   note: {
-    lines: ["Intinya, selamat ulang tahun yaaa princess"],
+    lines: ["Intinya, selamat ulang tahun yaaa princess, yang baik, cantik, pintar, imut , pendek, suka seafood, suka daging, suka jajan, suka seblak, suka cheese cake, suka warna pink, maroon dan brown, specially pinknya yang hexa #FFD6E0, suka buah nanas mangga anggur, mangga top 1 kalo udah dikupas, suka buku dari keigo higashino, suka anime genre mistery, action, romance and sport (kalo artnya bagus), yang suka jus semangka and mangga (top two kalo jus), yang suka matcha (top one kalo non jus), yang love languagenya quality time and giving gift, and suka banget di act of service   wish you all all all all all all the besstttt."],
   },
 
   closing: {
-    lines: ["as i always said, panjang umur and sehat selalu:)", "i hope you like it"],
+    lines: ["as i always said, panjang umur and sehat selalu yaaa.", "i hope you like it, this is all from my heart:)"],
 
     button: {
       label: "A letter from my friend",

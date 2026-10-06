@@ -2,11 +2,15 @@
 
 import { useRef } from "react";
 import { gsap, useGSAP, whileVisible } from "@/lib/gsap";
+import Image from "next/image";
 import { content } from "@/lib/content";
 import { MOTION_OK_QUERY, burstPetals, blurFrom } from "@/lib/motion-utils";
+import FloatingDecor from "@/components/ui/FloatingDecor";
 
 const { proud, proudNote } = content.journey;
 const words = proud.split(" ");
+
+const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
 export default function Proud() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -43,7 +47,12 @@ export default function Proud() {
             duration: 0.4,
           })
           .from(q(".proud-star"), { scale: 0, rotate: -120, opacity: 0, stagger: 0.08, duration: 0.25, ease: "back.out(3)" }, ">-0.15")
+          .from(q(".proud-mascot"), { yPercent: 70, opacity: 0, rotate: -12, duration: 0.35, ease: "back.out(1.8)" }, ">-0.1")
           .from(q(".proud-note"), { opacity: 0, y: 16, ...blurFrom(5), duration: 0.3 }, "<");
+        whileVisible(
+          gsap.to(q(".proud-mascot img"), { rotate: 5, y: -4, duration: 0.9, ease: "sine.inOut", yoyo: true, repeat: -1, delay: 1 }),
+          sectionRef.current,
+        );
         whileVisible(gsap.to(q(".proud-star"), { rotation: 90, duration: 2.6, repeat: -1, ease: "none", stagger: 0.5 }), sectionRef.current);
       });
     },
@@ -52,6 +61,12 @@ export default function Proud() {
 
   return (
     <section ref={sectionRef} data-bg="#FDECEF" data-stem-leaf className="relative z-10 flex flex-col items-center px-6 pt-36 pb-28 text-center md:pt-44">
+      <FloatingDecor
+        items={[
+          { kind: "cake", x: 84, y: 12, size: 44, depth: -0.5, rotate: 10 },
+          { kind: "swatch", x: 5, y: 86, size: 38, depth: 0.6, rotate: -14 },
+        ]}
+      />
       <h2
         className="proud-title font-display relative text-[clamp(3rem,15vw,7rem)] leading-none font-bold tracking-tight text-maroon italic"
         aria-label={proud}
@@ -72,6 +87,14 @@ export default function Proud() {
           </svg>
         ))}
       </h2>
+      <div aria-hidden className="relative mt-6 h-28 w-28 overflow-hidden md:h-36 md:w-36">
+        <div
+          className="proud-mascot size-full"
+          style={{ maskImage: "linear-gradient(to bottom, black 75%, transparent)", WebkitMaskImage: "linear-gradient(to bottom, black 75%, transparent)" }}
+        >
+          <Image src={`${BASE_PATH}/images/enfp-cut.webp`} alt="" width={240} height={240} className="size-full object-contain" />
+        </div>
+      </div>
       <p className="proud-note mt-5 text-lg text-cocoa/80 md:text-xl">{proudNote}</p>
     </section>
   );
