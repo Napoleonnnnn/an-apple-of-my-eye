@@ -1,5 +1,5 @@
 export const content = {
-  tabTitle: "cepat sembuh ya",
+  tabTitle: "to my fav person",
 
   hero: {
     title: "hbd Nandaaa Noviraaa",
