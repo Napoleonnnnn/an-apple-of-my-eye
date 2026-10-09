@@ -12,7 +12,7 @@ import { LILY_BLOOM, LILY_CLOSE, MOTION_OK_QUERY, burstPetals } from "@/lib/moti
 const { lines, button } = content.closing;
 
 const DECOR: DecorItem[] = [
-  { kind: "phone", x: 86, y: 74, size: 36, depth: 0.3, rotate: -10 },
+  { kind: "phone", x: 86, y: 30, size: 36, depth: 0.3, rotate: -10 },
   { kind: "sparkle", x: 8, y: 18, size: 16, depth: -0.7 },
   { kind: "sparkle", x: 90, y: 30, size: 12, depth: 0.8 },
   { kind: "petal", x: 6, y: 74, size: 20, depth: 0.6 },
@@ -84,29 +84,26 @@ export default function Closing() {
   );
 
   return (
-    <section
-      data-bg="#FFF8F2"
-      ref={sectionRef}
-      data-stem-leaf
-      className="relative z-10 flex min-h-[100svh] flex-col items-center px-6 pt-[9svh] pb-[8svh] text-center"
-    >
+    <section data-bg="#FFF8F2" ref={sectionRef} data-stem-leaf className="relative z-10 flex flex-col items-center px-6 pb-36 text-center lg:min-h-[100svh] lg:flex-row lg:items-center lg:justify-center lg:gap-14 lg:pt-6 lg:pb-36">
       <FloatingDecor items={DECOR} />
       <Chase />
-      <div className="relative aspect-square w-[min(72vw,320px)]">
-        <div ref={lilyRef} className="big-lily size-full">
-          <Lily glow className="size-full overflow-visible drop-shadow-[0_14px_22px_rgba(110,31,46,0.16)]" />
+      <div className="flex min-h-[100svh] w-full flex-col items-center justify-center py-[6svh] lg:min-h-0 lg:w-auto lg:max-w-xl lg:py-0">
+        <div className="relative aspect-square w-[min(68vw,46svh,320px)] lg:w-[min(40svh,320px)]">
+          <div ref={lilyRef} className="big-lily size-full">
+            <Lily glow className="size-full overflow-visible drop-shadow-[0_14px_22px_rgba(110,31,46,0.16)]" />
+          </div>
+
+          <div data-stem-end aria-hidden className="absolute top-1/2 left-1/2 size-0" />
         </div>
 
-        <div data-stem-end aria-hidden className="absolute top-1/2 left-1/2 size-0" />
+        <div className="mt-4 flex flex-col items-center gap-3">
+          <p className="closing-reveal font-display text-balance text-[clamp(1.9rem,8.5vw,3.25rem)] leading-tight font-medium text-maroon">{lines[0]}</p>
+          <p className="closing-reveal max-w-[21rem] text-balance text-base leading-relaxed text-cocoa/85 md:max-w-none md:text-lg">{lines[1]}</p>
+        </div>
       </div>
 
-      <div className="mt-4 flex flex-col items-center gap-3">
-        <p className="closing-reveal font-display text-balance text-[clamp(1.9rem,8.5vw,3.25rem)] leading-tight font-medium text-maroon">{lines[0]}</p>
-        <p className="closing-reveal max-w-[21rem] text-balance text-base leading-relaxed text-cocoa/85 md:max-w-none md:text-lg">{lines[1]}</p>
-
-        <div className="closing-reveal mt-6">
-          <LockedLink label={button.label} unlockAt={button.unlockAt} />
-        </div>
+      <div className="closing-reveal lg:max-w-md">
+        <LockedLink label={button.label} unlockAt={button.unlockAt} robots={content.closing.robots} />
       </div>
     </section>
   );

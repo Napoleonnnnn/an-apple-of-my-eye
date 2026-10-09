@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { AnimatePresence, motion } from "motion/react";
+import Image from "next/image";
 import { burstPetals } from "@/lib/motion-utils";
 
 const subscribe = (cb: () => void) => {
@@ -75,7 +76,9 @@ function Lock({ open }: { open: boolean }) {
   );
 }
 
-export default function LockedLink({ label, unlockAt }: { label: string; unlockAt: string }) {
+type Robots = { text: string; images: readonly string[] };
+
+export default function LockedLink({ label, unlockAt, robots }: { label: string; unlockAt: string; robots?: Robots }) {
   const now = useSyncExternalStore(subscribe, getNow, getServerNow);
   const target = Math.floor(new Date(unlockAt).getTime() / 1000);
   const ready = now !== 0;
@@ -150,6 +153,32 @@ export default function LockedLink({ label, unlockAt }: { label: string; unlockA
             transition={{ type: "spring", stiffness: 220, damping: 14 }}
           >
             <Lock open />
+            {robots && (
+              <div className="mb-2 flex max-w-md flex-col items-center gap-4">
+                <motion.p
+                  className="text-base leading-relaxed text-balance text-cocoa md:text-lg"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3, duration: 0.5 }}
+                >
+                  {robots.text}
+                </motion.p>
+                <div className="flex items-start justify-center gap-3">
+                  {robots.images.map((src, i) => (
+                    <motion.div
+                      key={src}
+                      className="relative w-[9.5rem] rounded-md bg-white p-1.5 pb-6 shadow-lift md:w-44"
+                      initial={{ opacity: 0, y: 30, rotate: i ? 10 : -10, scale: 0.8 }}
+                      animate={{ opacity: 1, y: 0, rotate: i ? 4 : -4, scale: 1 }}
+                      transition={{ type: "spring", stiffness: 180, damping: 14, delay: 0.5 + i * 0.2 }}
+                    >
+                      <Image src={`${BASE_PATH}/images/${src}`} alt="" width={360} height={240} className="aspect-[4/3] w-full rounded-[3px] object-cover" />
+                      <span className="font-display absolute bottom-1 left-0 w-full text-center text-sm font-semibold text-maroon">{i + 1}</span>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+            )}
             <motion.a
               href={isRealLink(href) ? href : undefined}
               target="_blank"

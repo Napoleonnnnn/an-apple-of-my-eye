@@ -267,6 +267,10 @@ export default function LilyStem() {
     let bloomed = false;
     let prevX = tip.x;
 
+    const fade = budFadeRef.current;
+    const hideBud = () => gsap.to(fade, { opacity: 0, scale: 0.4, duration: 0.45, ease: "power2.in", overwrite: true });
+    const showBud = () => gsap.to(fade, { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(2)", overwrite: true });
+
     const update = (progress: number) => {
       tip = sampleAt(layout, layout.startY + (layout.endY - layout.startY) * progress);
       stemState.tipY = tip.t;
@@ -274,9 +278,11 @@ export default function LilyStem() {
       const left = tip.t < layout.endY - 140;
       if (arrived && !bloomed) {
         bloomed = true;
+        hideBud();
         window.dispatchEvent(new Event(LILY_BLOOM));
       } else if (left && bloomed) {
         bloomed = false;
+        showBud();
         window.dispatchEvent(new Event(LILY_CLOSE));
       }
       parts.forEach((part, k) => setPart(k, tip.len - layout.lens[part.c.i0]));
@@ -293,12 +299,30 @@ export default function LilyStem() {
       });
     };
 
+    // the bud reaches the lily when the lily sits in the middle of the screen (not at the very bottom of the page)
     const liveProgress = () => {
+      const main = rootRef.current?.parentElement;
+      const mainTop = main ? main.getBoundingClientRect().top + window.scrollY : 0;
       const max = document.documentElement.scrollHeight - window.innerHeight;
-      return max > 0 ? clamp(window.scrollY / max, 0, 1) : 0;
+      const arrive = Math.min(max, mainTop + layout.endY - window.innerHeight * 0.45);
+      return arrive > 0 ? clamp(window.scrollY / arrive, 0, 1) : 0;
     };
-    const st = ScrollTrigger.create({ start: 0, end: "max", onUpdate: () => update(liveProgress()) });
-    const onResize = () => update(liveProgress());
+    let refreshing = false;
+    const live = () => {
+      if (refreshing) return;
+      update(liveProgress());
+    };
+    const onRefreshInit = () => {
+      refreshing = true;
+    };
+    const onRefreshed = () => {
+      refreshing = false;
+      live();
+    };
+    ScrollTrigger.addEventListener("refreshInit", onRefreshInit);
+    ScrollTrigger.addEventListener("refresh", onRefreshed);
+    const st = ScrollTrigger.create({ start: 0, end: "max", onUpdate: live });
+    const onResize = live;
     window.addEventListener("resize", onResize);
     update(liveProgress());
 
@@ -318,19 +342,14 @@ export default function LilyStem() {
     };
     gsap.ticker.add(tick);
 
-    const fade = budFadeRef.current;
-    const onBloom = () => gsap.to(fade, { opacity: 0, scale: 0.4, duration: 0.45, ease: "power2.in", overwrite: true });
-    const onClose = () => gsap.to(fade, { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(2)", overwrite: true });
-    window.addEventListener(LILY_BLOOM, onBloom);
-    window.addEventListener(LILY_CLOSE, onClose);
 
     return () => {
       st.kill();
+      ScrollTrigger.removeEventListener("refreshInit", onRefreshInit);
+      ScrollTrigger.removeEventListener("refresh", onRefreshed);
       window.removeEventListener("resize", onResize);
       gsap.ticker.remove(tick);
       gsap.killTweensOf(leaves);
-      window.removeEventListener(LILY_BLOOM, onBloom);
-      window.removeEventListener(LILY_CLOSE, onClose);
     };
   }, [layout, reduced]);
 

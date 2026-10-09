@@ -1,10 +1,10 @@
 export const content = {
-  tabTitle: "hbd to my favorite person",
+  tabTitle: "cepat sembuh ya",
 
   hero: {
     title: "hbd Nandaaa Noviraaa",
     subtitle: 'tiba" dah tanggal 10, makin tua ya ke akwoako',
-    hint: 'scroll pelan" ya my fav person (eakkk)',
+    hint: 'tolong scroll pelan" ya',
   },
 
   ruler: "umur doang nambah tingginya kapan",
@@ -76,11 +76,17 @@ export const content = {
   },
 
   closing: {
-    lines: ["as i always said, panjang umur and sehat selalu yaaa.", "i hope you like it, this is all from my heart:)"],
+    lines: ["as i always said, panjang umur and sehat selalu yaaa.", "i hope you like it, this is all from my heart:), cepat sembuh ya"],
 
     button: {
-      label: "A letter from my friend",
-      unlockAt: "2026-10-10T22:00:00+07:00",
+      label: "tekan link ini aja biar kawan aku jelasin",
+      unlockAt: "2026-10-01T00:00:00+07:00",
+    },
+
+    // muncul bareng tombolnya setelah gemboknya kebuka
+    robots: {
+      text: "btw aku mau buat robot yang ini (nomor 1) dan kasi ke ke dan yang kedua untuk pamer, cuma...",
+      images: ["robot-1.webp", "robot-2.webp"],
     },
   },
 } as const;
