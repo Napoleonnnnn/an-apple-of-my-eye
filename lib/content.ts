@@ -85,7 +85,7 @@ export const content = {
 
     // muncul bareng tombolnya setelah gemboknya kebuka
     robots: {
-      text: "btw aku mau buat robot yang ini (nomor 1) dan kasi ke ke dan yang kedua untuk pamer, cuma...",
+      text: "btw aku mau buat robot yang ini (nomor 1) dan kasi ke ke dan yang kedua untuk pamer, tinggal nunggu batrenya nyampee",
       images: ["robot-1.webp", "robot-2.webp"],
     },
   },
