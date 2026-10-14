@@ -76,7 +76,7 @@ export const content = {
   },
 
   closing: {
-    lines: ["as i always said, panjang umur and sehat selalu yaaa.", "i hope you like it, these all from my heart:)"],
+    lines: ["as i always said, panjang umur and sehat selalu yaaa.", "i hope you like it, these all from my heart:), semangatt menujuuu sidangg"],
 
     button: {
       label: "tekan link ini aja biar kawan aku jelasin",
